@@ -14,7 +14,6 @@
     font-family inherit
     font-size 1rem
     color white
-    padding-left 10px
     background #000000AA
     z-index 1
     opacity 0

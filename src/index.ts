@@ -1,3 +1,7 @@
+// @ts-ignore
+import DragNDropLoader from "./DragNDropLoader.vue";
+
+
 const DEFAULT_ACCEPT = ['image', 'image/png', 'image/jpeg', 'image/jpg', 'image/bmp'];
 const MB_IN_BYTES = 1024 * 1024;
 
@@ -190,3 +194,5 @@ export function draggedImageToBase64 (
 ) {
   return inputImageToDataURL(dataTransfer, cropToSquare, compressSize, maxFileSizeMB);
 }
+
+export {DragNDropLoader};
