@@ -1,0 +1,36 @@
+{
+  "name": "@sergtyapkin/image-uploader",
+  "version": "1.1.1",
+  "private": false,
+  "license": "MIT",
+  "author": {
+    "name": "Sergey Tyapkin",
+    "email": "Sererga115@gmail.com"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "keywords": [
+    "images",
+    "upload",
+    "base64",
+    "load",
+    "img",
+    "ecoding"
+  ],
+  "homepage": "https://github.com/SergTyapkin/js-image-uploader",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SergTyapkin/js-image-uploader.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SergTyapkin/js-image-uploader/issues"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^22.7.3",
+    "typescript": "^5.6.2"
+  }
+}

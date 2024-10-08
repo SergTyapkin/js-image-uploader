@@ -1,0 +1,41 @@
+<html lang="en">
+<head>
+    <title>Example</title>
+    <meta charset="utf-8">
+
+    <style>
+        img {
+            border: 1px solid orange;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <img id="image" src="" alt="No image">
+    </div>
+    <button id="btnCrop">Upload and crop image</button>
+    <button id="btnCompress">Upload and compress image</button>
+    <button id="btnLoad">Upload image</button>
+
+    <script type="module">
+        import getImageAsDataURL from './getImageAsDataURL.js';
+
+        const image = document.getElementById("image")
+
+        const btnCrop = document.getElementById("btnCrop");
+        btnCrop.addEventListener('click', async function () {
+            image.src = await getImageAsDataURL();
+        });
+
+        const btnCompress = document.getElementById("btnCompress");
+        btnCompress.addEventListener('click', async function () {
+            image.src = await getImageAsDataURL(null, 64);
+        });
+
+        const btnLoad = document.getElementById("btnLoad");
+        btnLoad.addEventListener('click', async function () {
+            image.src = await getImageAsDataURL(null);
+        });
+    </script>
+</body>
+</html>
