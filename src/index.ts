@@ -1,7 +1,3 @@
-// @ts-ignore
-import DragNDropLoader from "./DragNDropLoader.vue";
-
-
 const DEFAULT_ACCEPT = ['image', 'image/png', 'image/jpeg', 'image/jpg', 'image/bmp'];
 const MB_IN_BYTES = 1024 * 1024;
 
@@ -19,8 +15,12 @@ function createCanvas(width: number, height: number) {
 }
 
 
-function createImageInput(changeCallback: (event: Event) => void, accept: string[]) {
-  const imageInput = document.createElement('input') as HTMLInputElement;
+function createImageInput(changeCallback: (event: Event) => void, accept: string[]): HTMLInputElement {
+  let imageInput = document.getElementById(TEMP_EL_ID) as HTMLInputElement;
+  if (!imageInput) {
+    imageInput = document.createElement('input') as HTMLInputElement;
+    document.body.appendChild(imageInput); // otherwise don't work on ios
+  }
   imageInput.id = TEMP_EL_ID;
   imageInput.type = 'file';
   imageInput.accept = accept.join(', ');
@@ -28,7 +28,6 @@ function createImageInput(changeCallback: (event: Event) => void, accept: string
 
   imageInput.style.display = 'none';
 
-  document.body.appendChild(imageInput); // otherwise don't work on ios
   return imageInput;
 }
 
@@ -90,23 +89,26 @@ function compressImage(dataUrl: string, compressSize?: number): Promise<string> 
     img.addEventListener('load', () => {
       const imgMinSize = Math.min(img.width, img.height);
 
-      if (imgMinSize > compressSize) {
-        const percents = imgMinSize / compressSize;
-        const newWidth = img.width / percents;
-        const newHeight = img.height / percents;
-
-        const {canvas, ctx} = createCanvas(newWidth, newHeight);
-        if (!ctx) {
-          reject(Error("Unable to create canvas context"));
-          return;
-        }
-        ctx.drawImage(img, 0, 0, newWidth, newHeight);
-
-        const dataURL = canvas.toDataURL();
-        canvas.remove();
-
-        resolve(dataURL);
+      if (imgMinSize <= compressSize) {
+        resolve(dataUrl);
+        return;
       }
+
+      const percents = imgMinSize / compressSize;
+      const newWidth = img.width / percents;
+      const newHeight = img.height / percents;
+
+      const {canvas, ctx} = createCanvas(newWidth, newHeight);
+      if (!ctx) {
+        reject(Error("Unable to create canvas context"));
+        return;
+      }
+      ctx.drawImage(img, 0, 0, newWidth, newHeight);
+
+      const dataURL = canvas.toDataURL();
+      canvas.remove();
+
+      resolve(dataURL);
     });
   });
 }
@@ -162,16 +164,16 @@ export async function loadImageInBase64(
   acceptExtensions: string[] = DEFAULT_ACCEPT,
 ) {
   return new Promise((resolve, reject) => {
-    createImageInput(async (event) => {
+    const inputElement = createImageInput(async (event) => {
       try {
         const dataUrl = await inputImageToDataURL(event.target as HTMLInputElement, cropToSquare, compressSize, maxFileSizeMB);
-        (event.target as HTMLInputElement).remove();
         resolve(dataUrl);
       } catch (err) {
-        (event.target as HTMLInputElement).remove();
         reject(err);
       }
-    }, acceptExtensions).click();
+      inputElement.remove();
+    }, acceptExtensions);
+    inputElement.click();
   });
 }
 
@@ -194,5 +196,3 @@ export function draggedImageToBase64 (
 ) {
   return inputImageToDataURL(dataTransfer, cropToSquare, compressSize, maxFileSizeMB);
 }
-
-export {DragNDropLoader};

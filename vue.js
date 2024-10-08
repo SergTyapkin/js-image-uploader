@@ -1,3 +1,2 @@
-// @ts-ignore
-import DragNDropLoader from "./DragNDropLoader.vue";
-export {DragNDropLoader}
+import DragNDropLoader from "./dist/DragNDropLoader.vue";
+export default DragNDropLoader;

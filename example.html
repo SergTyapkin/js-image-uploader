@@ -42,7 +42,7 @@
         const image = document.getElementById("image");
 
         image.addEventListener('drop', async function (e) {
-            console.log("DROP", cropInput.checked, compressInput.value);
+            console.log("DROP", "crop:", cropInput.checked, "compress:", compressInput.value);
             e.preventDefault();
             image.src = await draggedImageToBase64(e.dataTransfer, Boolean(cropInput.checked), Number(compressInput.value));
             image.classList.remove('in-drag');

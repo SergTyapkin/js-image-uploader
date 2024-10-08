@@ -10,6 +10,7 @@
 
 # ES6 lib interface:
 There are 2 functions. All of them returns gotten image in base64 url encoding:
+`import {loadImageInBase64, draggedImageToBase64} from "@sergtyapkin/images-uploader"`
 
 ### 1. To get image thorough filesystem dialogue:
 ```ts
@@ -57,6 +58,7 @@ export function draggedImageToBase64 (
 ```
 
 # Vue.js component:
+`import DragNDropLoader from "@sergtyapkin/images-uploader/vue"`
 
 ## Usage:
 Component has a `<slot>` place inside to insert the elements on which it must works.
@@ -72,12 +74,14 @@ Example:
 ```
 
 ## Props:
-| name           | type    | required | description                                                                                                                |
-|----------------|---------|----------|----------------------------------------------------------------------------------------------------------------------------|
-| cropToSquare   | Boolean | yes      | Is results dataUrl must be a square with size of minimal image side, if null => dataUrl with the size of an original image |
-| compressSize   | Number  | yes      | Size to compress the longest side in, if null => dataUrl with the size of an original image                                |
-| maxAllowedSize | Number  |          | Maximum allowed file size in MB                                                                                            |
-| disabled       | Boolean |          | Is component disabled (not reacts on user events)                                                                          |
+| name             | type    | required | description                                                                                                                |
+|------------------|---------|----------|----------------------------------------------------------------------------------------------------------------------------|
+| cropToSquare     | Boolean | yes      | Is results dataUrl must be a square with size of minimal image side, if null => dataUrl with the size of an original image |
+| compressSize     | Number  | yes      | Size to compress the longest side in, if null => dataUrl with the size of an original image                                |
+| maxAllowedSize   | Number  |          | Maximum allowed file size in MB                                                                                            |
+| worksOnClick     | Boolean |          | Is loads image by click                                                                                                    |
+| worksOnDragNDrop | Boolean |          | Is loads image by drag and drop into elements inside `<slot>`                                                              |
+| disabled         | Boolean |          | Is component disabled (not reacts on user events)                                                                          |
 
 ## Events:
 | name           | value  | description                                               |

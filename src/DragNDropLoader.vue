@@ -9,8 +9,6 @@
     align-items center
     justify-content center
     text-align center
-    border-radius 999999999px
-    overflow hidden
     font-family inherit
     font-size 1rem
     color white
@@ -41,8 +39,8 @@
      @dragenter="isInDrag = true"
      @dragleave="isInDrag = false"
      @dragover.prevent="isInDrag = true"
-     @drop.prevent="handleDrop"
-     @click="getUserImage"
+     @drop.prevent="_handleDrop"
+     @click="_handleClick"
   >
     <slot></slot>
   </div>
@@ -68,6 +66,14 @@ export default {
       type: Number,
       default: Infinity,
     },
+    worksOnClick: {
+      type: Boolean,
+      default: true,
+    },
+    worksOnDragNDrop: {
+      type: Boolean,
+      default: true,
+    },
     disabled: Boolean,
   },
 
@@ -78,15 +84,36 @@ export default {
   },
 
   methods: {
-    async handleDrop(event) {
+    async _handleDrop(event) {
+      if (!this.worksOnDragNDrop) {
+        return;
+      }
+      if (this.disabled) {
+        return;
+      }
+      this.isInDrag = false;
+
+      let dataURL;
+      try {
+        dataURL = await draggedImageToBase64(event.dataTransfer, this.cropToSquare, this.compressSize, this.maxAllowedSize);
+        this.$emit('load', dataURL);
+      } catch (err) {
+        this.$emit('error', `Ошибка загрузки изображения: ${err}`);
+      }
+    },
+
+    async _handleClick(event) {
+      if (!this.worksOnClick) {
+        return;
+      }
+      if (this.disabled) {
+        return;
+      }
       this.isInDrag = false;
       this.$emit('load', await draggedImageToBase64(event.dataTransfer, this.cropToSquare, this.compressSize, this.maxAllowedSize));
     },
 
-    async getUserImage() {
-      if (this.disabled) {
-        return;
-      }
+    async loadUserImage() {
       let dataURL;
       try {
         dataURL = await loadImageInBase64(this.cropToSquare, this.compressSize, Infinity);
