@@ -5,36 +5,61 @@
 
     <style>
         img {
+            display: block;
             border: 1px solid orange;
+            width: 400px;
+            min-height: 300px;
+            height: min-content;
+            cursor: pointer;
+            background: #00000020;
+            transition: all 0.2s ease;
+        }
+        img:hover,
+        img.in-drag {
+            filter: brightness(1.1);
+            background: #00000060;
         }
     </style>
 </head>
 <body>
+    <img id="image" src="" alt="No image">
+    <div>To load image click or drag it on image field</div>
     <div>
-        <img id="image" src="" alt="No image">
+        <label for="crop">Crop size:</label>
+        <input id="crop" type="checkbox">
     </div>
-    <button id="btnCrop">Upload and crop image</button>
-    <button id="btnCompress">Upload and compress image</button>
-    <button id="btnLoad">Upload image</button>
+    <div>
+        <label for="compress">Compress size:</label>
+        <input id="compress" type="number" value="256">
+    </div>
 
     <script type="module">
-        import getImageAsDataURL from './getImageAsDataURL.js';
+        import {draggedImageToBase64, loadImageInBase64} from "./dist/index.js";
 
-        const image = document.getElementById("image")
+        const cropInput = document.getElementById("crop");
+        const compressInput = document.getElementById("compress");
 
-        const btnCrop = document.getElementById("btnCrop");
-        btnCrop.addEventListener('click', async function () {
-            image.src = await getImageAsDataURL();
+        const image = document.getElementById("image");
+
+        image.addEventListener('drop', async function (e) {
+            console.log("DROP", cropInput.checked, compressInput.value);
+            e.preventDefault();
+            image.src = await draggedImageToBase64(e.dataTransfer, Boolean(cropInput.checked), Number(compressInput.value));
+            image.classList.remove('in-drag');
+        });
+        image.addEventListener('dragenter', function () {
+            image.classList.add('in-drag');
+        });
+        image.addEventListener('dragover', function (e) {
+            e.preventDefault();
+            image.classList.add('in-drag');
+        });
+        image.addEventListener('dragleave', function () {
+            image.classList.remove('in-drag');
         });
 
-        const btnCompress = document.getElementById("btnCompress");
-        btnCompress.addEventListener('click', async function () {
-            image.src = await getImageAsDataURL(null, 64);
-        });
-
-        const btnLoad = document.getElementById("btnLoad");
-        btnLoad.addEventListener('click', async function () {
-            image.src = await getImageAsDataURL(null);
+        image.addEventListener('click', async function () {
+            image.src = await loadImageInBase64();
         });
     </script>
 </body>

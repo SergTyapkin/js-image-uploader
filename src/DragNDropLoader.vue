@@ -3,25 +3,26 @@
   &::before
   &::after
     content 'Изменить'
-    border-radius 999999999px
-    overflow hidden
-    font-family Arial
-    padding-left 10px
-    font-size 15px
-    text-align center
-    display flex
-    align-items center
     position absolute
     inset 0
+    display flex
+    align-items center
+    justify-content center
+    text-align center
+    border-radius 999999999px
+    overflow hidden
+    font-family inherit
+    font-size 1rem
+    color white
+    padding-left 10px
     background #000000AA
     z-index 1
     opacity 0
     transition opacity 0.3s ease
     cursor pointer
-    color white
 
   &::after
-    content 'Отпустите чтобы загрузить'
+    content 'Отпустите, чтобы загрузить'
 
   &:hover::before
     opacity 1
@@ -49,15 +50,15 @@
 </template>
 
 <script>
-import {getImageAsDataURL, getLoadedImageAsDataURL} from "@korolion/get-image-as-dataurl";
+import {loadImageInBase64, draggedImageToBase64} from "./index"
 
 
 export default {
-  emits: ['load'],
+  emits: ['load', 'error'],
 
   props: {
-    cropSize: {
-      type: Number,
+    cropToSquare: {
+      type: Boolean,
       required: true,
     },
     compressSize: {
@@ -80,7 +81,7 @@ export default {
   methods: {
     async handleDrop(event) {
       this.isInDrag = false;
-      this.$emit('load', await getLoadedImageAsDataURL(event.dataTransfer, this.cropSize, this.compressSize, this.maxAllowedSize));
+      this.$emit('load', await draggedImageToBase64(event.dataTransfer, this.cropToSquare, this.compressSize, this.maxAllowedSize));
     },
 
     async getUserImage() {
@@ -89,12 +90,11 @@ export default {
       }
       let dataURL;
       try {
-        dataURL = await getImageAsDataURL(this.cropSize, this.compressSize, undefined, Infinity);
+        dataURL = await loadImageInBase64(this.cropToSquare, this.compressSize, Infinity);
+        this.$emit('load', dataURL);
       } catch (err) {
-        this.popups.error("Ошибка загрузки изображения", err.toString());
-        throw err;
+        this.$emit('error', `Ошибка загрузки изображения: ${err}`);
       }
-      this.$emit('load', dataURL);
     }
   }
 };

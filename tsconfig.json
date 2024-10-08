@@ -4,8 +4,6 @@
     "outDir": "./dist",
 
     "target": "es2015",
-    "lib": ["esnext", "DOM", "DOM.Iterable"],
-    "module": "commonjs",
     "allowJs": false,
     "skipLibCheck": true,
 
