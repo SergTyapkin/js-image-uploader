@@ -110,13 +110,13 @@ export default {
         return;
       }
       this.isInDrag = false;
-      this.$emit('load', await draggedImageToBase64(event.dataTransfer, this.cropToSquare, this.compressSize, this.maxAllowedSize));
+      this.$emit('load', await this.loadUserImage());
     },
 
     async loadUserImage() {
       let dataURL;
       try {
-        dataURL = await loadImageInBase64(this.cropToSquare, this.compressSize, Infinity);
+        dataURL = await loadImageInBase64(this.cropToSquare, this.compressSize, this.maxAllowedSize);
         this.$emit('load', dataURL);
       } catch (err) {
         this.$emit('error', `Ошибка загрузки изображения: ${err}`);
