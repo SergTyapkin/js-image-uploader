@@ -17,9 +17,10 @@ function createCanvas(width: number, height: number) {
 
 function createImageInput(changeCallback: (event: Event) => void, accept: string[]): HTMLInputElement {
   let imageInput = document.getElementById(TEMP_EL_ID) as HTMLInputElement;
+  let inputWas = true;
   if (!imageInput) {
     imageInput = document.createElement('input') as HTMLInputElement;
-    document.body.appendChild(imageInput); // otherwise don't work on ios
+    inputWas = false;
   }
   imageInput.id = TEMP_EL_ID;
   imageInput.type = 'file';
@@ -28,6 +29,9 @@ function createImageInput(changeCallback: (event: Event) => void, accept: string
 
   imageInput.style.display = 'none';
 
+  if (!inputWas) {
+    document.body.appendChild(imageInput); // otherwise don't work on ios
+  }
   return imageInput;
 }
 
@@ -171,7 +175,6 @@ export async function loadImageInBase64(
       } catch (err) {
         reject(err);
       }
-      inputElement.remove();
     }, acceptExtensions);
     inputElement.click();
   });
