@@ -1,5 +1,6 @@
 <style lang="stylus" scoped>
 .root-drag-n-drop-loader
+  cursor pointer
   &::before
   &::after
     content 'Изменить'
@@ -16,7 +17,7 @@
     z-index 1
     opacity 0
     transition opacity 0.3s ease
-    cursor pointer
+    pointer-events none
 
   &::after
     content 'Отпустите, чтобы загрузить'
