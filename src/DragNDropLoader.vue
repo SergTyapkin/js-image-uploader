@@ -29,11 +29,11 @@
       opacity 1
 
 .root-drag-n-drop-loader.disabled
-  &::after
   &::before
+  &::after
     content none
 .root-drag-n-drop-loader.no-hover
-  &::after
+  &::before
     content none
 </style>
 
