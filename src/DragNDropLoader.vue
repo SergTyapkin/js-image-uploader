@@ -32,13 +32,16 @@
   &::after
   &::before
     content none
+.root-drag-n-drop-loader.no-hover
+  &::after
+    content none
 </style>
 
 <template>
-  <div class="root-drag-n-drop-loader" :class="{'in-drag': isInDrag, disabled}"
-     @dragenter="isInDrag = true"
-     @dragleave="isInDrag = false"
-     @dragover.prevent="isInDrag = true"
+  <div class="root-drag-n-drop-loader" :class="{'in-drag': isInDrag, disabled, 'no-hover': !worksOnClick}"
+     @dragenter="worksOnDragNDrop ? (isInDrag = true) : null"
+     @dragleave="worksOnDragNDrop ? (isInDrag = false) : null"
+     @dragover.prevent="worksOnDragNDrop ? (isInDrag = true) : null"
      @drop.prevent="_handleDrop"
      @click="_handleClick"
   >
